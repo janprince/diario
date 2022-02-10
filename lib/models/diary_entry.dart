@@ -1,15 +1,15 @@
 // This file contains the Diary Entry object definition.
 
 class DiaryEntry {
-  final String date;
+  final int mood;
   final String title;
   final String entry;
 
-  DiaryEntry({required this.date, required this.title, required this.entry});
+  DiaryEntry({required this.mood, required this.title, required this.entry});
 
-  Map<String, String> toMap() {
+  Map<String, dynamic> toMap() {
     return {
-      'date': date,
+      'mood': mood,
       'title': title,
       'entry': entry,
     };

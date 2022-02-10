@@ -1,8 +1,20 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:diario/constants.dart';
+import 'package:diario/models/db_functions.dart';
 import 'package:diario/pages/entry.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+// fetch data from db
+Future<List> entries() async {
+  List e = await getEntries();
+  var date = DateTime.parse(e[0]['date_created']);
+  var day = DateFormat('EEEE').format(date);
+  var month_day = DateFormat('MMMMd').format(date);
+  List d = [day, month_day];
+  return d;
+}
 
 class Mobile extends StatefulWidget {
   const Mobile({Key? key}) : super(key: key);
@@ -12,12 +24,16 @@ class Mobile extends StatefulWidget {
 }
 
 class _MobileState extends State<Mobile> {
+  // for bottom navbar
   int _selectedIndex = 0;
   void _onItemSelected(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
+
+  // entries
+  Future<List> entries = getEntries();
 
   @override
   Widget build(BuildContext context) {
@@ -231,7 +247,7 @@ class Home extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            'November 15',
+                            "November 13",
                             style: TextStyle(
                                 fontSize: 17,
                                 color: Colors.black,

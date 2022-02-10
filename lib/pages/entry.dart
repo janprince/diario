@@ -15,12 +15,23 @@ class EntryPage extends StatefulWidget {
 
 class _EntryPageState extends State<EntryPage> {
   TextEditingController titleController = TextEditingController();
-
   TextEditingController storyController = TextEditingController();
 
+  // date to display
   List<dynamic> date_now = get_date();
 
+  // form validation
   bool _validation_error = false;
+
+  // moods
+  int moodSelectedIndex = 3;
+  List moods = [
+    "assets/icons/emoji_1.png",
+    "assets/icons/emoji_2.png",
+    "assets/icons/emoji_3.png",
+    "assets/icons/emoji_4.png",
+    "assets/icons/emoji_5.png"
+  ];
 
   @override
   void dispose() {
@@ -49,7 +60,7 @@ class _EntryPageState extends State<EntryPage> {
             });
             if (_validation_error == false) {
               DiaryEntry diary_entry = DiaryEntry(
-                  date: date_now[1],
+                  mood: moodSelectedIndex,
                   title: titleController.value.text,
                   entry: storyController.value.text);
 
@@ -137,7 +148,7 @@ class _EntryPageState extends State<EntryPage> {
                   TextField(
                     controller: storyController,
                     textCapitalization: TextCapitalization.sentences,
-                    maxLines: 25,
+                    maxLines: 19,
                     decoration: InputDecoration(
                       hintStyle: TextStyle(
                           fontWeight: FontWeight.normal, color: Colors.grey),
@@ -146,14 +157,33 @@ class _EntryPageState extends State<EntryPage> {
                     ),
                   ),
                   Row(
-                    children: [
-                      Text("Mood"),
-                      Text("☹️"),
-                      Text("😞"),
-                      Text("😐"),
-                      Text("🙂"),
-                      Text("😁")
-                    ],
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: moods.map((e) {
+                      return moodSelectedIndex == moods.indexOf(e) + 1
+                          ? Container(
+                              padding: EdgeInsets.all(0.5),
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(width: 2, color: kBlue)),
+                              child: Image(
+                                image: AssetImage(e),
+                                width: 42,
+                                height: 42,
+                              ),
+                            )
+                          : GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  moodSelectedIndex = moods.indexOf(e) + 1;
+                                });
+                              },
+                              child: Image(
+                                image: AssetImage(e),
+                                width: 42,
+                                height: 42,
+                              ),
+                            );
+                    }).toList(),
                   ),
                 ],
               ),
