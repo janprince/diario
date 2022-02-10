@@ -76,7 +76,7 @@ class _EntryPageState extends State<EntryPage> {
                     child: GestureDetector(
                       onTap: () => Navigator.pop(context),
                       child: Icon(
-                        Icons.arrow_back,
+                        Icons.chevron_left,
                         color: Colors.grey,
                       ),
                     ),

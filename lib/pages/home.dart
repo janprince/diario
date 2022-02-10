@@ -98,16 +98,16 @@ class Home extends StatelessWidget {
                 ),
               ),
               Positioned(
-                bottom: -60,
+                bottom: -50,
                 left: 30,
-                // right: 40,
+                right: 30,
                 child: Material(
                   elevation: 9,
                   child: Container(
                     padding: EdgeInsets.all(20),
                     color: kPrimary,
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
                           margin: EdgeInsets.only(right: 15),
@@ -117,7 +117,7 @@ class Home extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 5),
                                 child: Text(
-                                  "Steps",
+                                  "Entries",
                                   style:
                                       TextStyle(fontSize: 13.5, color: kBlue),
                                 ),
@@ -132,7 +132,7 @@ class Home extends StatelessWidget {
                                         fontWeight: FontWeight.bold),
                                   ),
                                   Text(
-                                    " steps",
+                                    " entries",
                                     style: TextStyle(
                                         fontSize: 13, color: Colors.grey),
                                   )
@@ -140,6 +140,9 @@ class Home extends StatelessWidget {
                               )
                             ],
                           ),
+                        ),
+                        SizedBox(
+                          width: 50,
                         ),
                         Container(
                           margin: EdgeInsets.only(right: 15),
@@ -149,7 +152,7 @@ class Home extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 5),
                                 child: Text(
-                                  "Steps",
+                                  "Average Mood",
                                   style:
                                       TextStyle(fontSize: 13.5, color: kBlue),
                                 ),
@@ -174,38 +177,6 @@ class Home extends StatelessWidget {
                           ),
                         ),
                         Divider(color: Colors.grey),
-                        Container(
-                          margin: EdgeInsets.only(right: 15),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 5),
-                                child: Text(
-                                  "Steps",
-                                  style:
-                                      TextStyle(fontSize: 13.5, color: kBlue),
-                                ),
-                              ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    "1189",
-                                    style: TextStyle(
-                                        fontSize: 19,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    " steps",
-                                    style: TextStyle(
-                                        fontSize: 13, color: Colors.grey),
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
                       ],
                     ),
                   ),
@@ -223,7 +194,7 @@ class Home extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Happy News",
+                        "Latest Entries",
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 14),
                       ),
@@ -237,29 +208,42 @@ class Home extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                    color: kPrimary,
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  color: kPrimary,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded(
-                        child: Container(child: Text("Almost Amazing Day")),
+                      Container(
+                        margin: EdgeInsets.only(right: 15),
+                        width: 10,
+                        height: 50,
+                        color: Colors.blue,
                       ),
                       Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            "24th January, 2022",
-                            style:
-                                TextStyle(fontSize: 11.5, color: Colors.grey),
+                          Container(
+                            margin: EdgeInsets.only(bottom: 3),
+                            child: Text(
+                              "10: 00 am",
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 13),
+                            ),
                           ),
                           Text(
-                            "8:00 AM",
-                            style: TextStyle(fontSize: 11, color: Colors.grey),
+                            'November 15',
+                            style: TextStyle(
+                                fontSize: 17,
+                                color: Colors.black,
+                                fontFamily: "Roboto",
+                                fontWeight: FontWeight.w500),
                           )
                         ],
+                      ),
+                      Spacer(),
+                      Icon(
+                        Icons.chevron_right,
+                        color: Colors.grey,
                       )
                     ],
                   ),

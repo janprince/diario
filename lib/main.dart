@@ -28,7 +28,7 @@ class DiaryApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(scaffoldBackgroundColor: kPrimary),
+      theme: ThemeData(scaffoldBackgroundColor: kPrimary, fontFamily: "Roboto"),
       home: Mobile(),
       // routes: {
       //   "/": (context) => Mobile(),
