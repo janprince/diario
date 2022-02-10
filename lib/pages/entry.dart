@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, non_constant_identifier_names
 
 import 'package:diario/models/db_functions.dart';
 import 'package:diario/models/diary_entry.dart';
@@ -18,8 +18,7 @@ class _EntryPageState extends State<EntryPage> {
 
   TextEditingController storyController = TextEditingController();
 
-  var date_now =
-      DateFormat('EEEE, dd/MM/yyyy').format(DateTime.now()).toString();
+  var date_now = get_date();
 
   bool _validation_error = false;
 
@@ -75,41 +74,11 @@ class _EntryPageState extends State<EntryPage> {
                   Row(
                     children: [
                       Container(
-                        width: 100,
-                        margin: EdgeInsets.only(right: 13),
-                        padding: EdgeInsets.all(8),
-                        color: kSecondary,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Icon(
-                              Icons.emoji_emotions,
-                              size: 15,
-                            ),
-                            Text(
-                              "Add emoji",
-                              style: TextStyle(fontSize: 12),
-                            )
-                          ],
-                        ),
-                      ),
-                      Container(
-                        width: 100,
-                        margin: EdgeInsets.only(right: 13),
-                        padding: EdgeInsets.all(8),
-                        color: kSecondary,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Icon(
-                              Icons.image,
-                              size: 15,
-                            ),
-                            Text(
-                              "Add image",
-                              style: TextStyle(fontSize: 12),
-                            )
-                          ],
+                        // margin: EdgeInsets.symmetric(vertical: 40),
+                        child: Text(
+                          date_now,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500, color: Colors.grey),
                         ),
                       ),
                       Spacer(),
@@ -124,14 +93,6 @@ class _EntryPageState extends State<EntryPage> {
                         ),
                       ),
                     ],
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 40),
-                    child: Text(
-                      date_now,
-                      style: TextStyle(
-                          fontWeight: FontWeight.w500, color: Colors.grey),
-                    ),
                   ),
                   TextField(
                     controller: titleController,
@@ -206,4 +167,11 @@ class _EntryPageState extends State<EntryPage> {
           return alert;
         });
   }
+}
+
+String get_date() {
+  var dateNow = DateTime.now();
+  var day = DateFormat('EEEE').format(dateNow).toString();
+  var month_day = DateFormat('MMMMd').format(dateNow).toString();
+  return month_day;
 }

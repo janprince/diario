@@ -15,7 +15,7 @@ void main() async {
     join(await getDatabasesPath(), 'diario.db'),
     // When the database is first created, do this:
     onCreate: (db, version) => db.execute(
-        'CREATE TABLE diary_entry (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, date TEXT, title TEXT, entry TEXT)'),
+        'CREATE TABLE diary_entry (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, date TEXT, title TEXT, entry TEXT, date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP)'),
     // Set the version. This executes the onCreate function and provides a
     // path to perform database upgrades and downgrades.
     version: 1,
