@@ -1,5 +1,7 @@
+// This file contains methods/functions for interacting with the database.
+
 import 'package:diario/globals.dart';
-import 'package:diario/models/diary.dart';
+import 'package:diario/models/diary_entry.dart';
 import 'package:sqflite/sqflite.dart';
 
 // insert into database
@@ -15,7 +17,7 @@ Future insertEntry(DiaryEntry entry) async {
 }
 
 // retrieve from database
-Future<List> entries() async {
+Future<List> getEntries() async {
   // Get a reference to the database.
   final db = await database;
 

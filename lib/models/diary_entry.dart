@@ -1,3 +1,5 @@
+// This file contains the Diary Entry object definition.
+
 class DiaryEntry {
   final String date;
   final String title;

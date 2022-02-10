@@ -5,4 +5,4 @@ import 'package:sqflite/sqflite.dart';
 Future<Database>? database;
 
 
-// This file makes the database object available as a library.
+// This file makes the database object available throughout the project.

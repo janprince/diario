@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'package:diario/models/database.dart';
-import 'package:diario/models/diary.dart';
+import 'package:diario/models/db_functions.dart';
+import 'package:diario/models/diary_entry.dart';
 import 'package:intl/intl.dart';
 import 'package:diario/constants.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +55,7 @@ class _EntryPageState extends State<EntryPage> {
                   entry: storyController.value.text);
 
               await insertEntry(diary_entry);
-              List e = await entries();
+              List e = await getEntries();
               print("trtrtt ${e}");
             }
           },
