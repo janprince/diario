@@ -18,7 +18,7 @@ class _EntryPageState extends State<EntryPage> {
 
   TextEditingController storyController = TextEditingController();
 
-  var date_now = get_date();
+  List<dynamic> date_now = get_date();
 
   bool _validation_error = false;
 
@@ -49,7 +49,7 @@ class _EntryPageState extends State<EntryPage> {
             });
             if (_validation_error == false) {
               DiaryEntry diary_entry = DiaryEntry(
-                  date: date_now,
+                  date: date_now[1],
                   title: titleController.value.text,
                   entry: storyController.value.text);
 
@@ -67,32 +67,59 @@ class _EntryPageState extends State<EntryPage> {
         body: SingleChildScrollView(
           child: SafeArea(
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 15),
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        // margin: EdgeInsets.symmetric(vertical: 40),
-                        child: Text(
-                          date_now,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500, color: Colors.grey),
-                        ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Icon(
+                        Icons.arrow_back,
+                        color: Colors.grey,
                       ),
-                      Spacer(),
-                      TextButton(
-                        onPressed: () => _showMaterialDialog(context),
-                        child: Text(
-                          "Cancel",
-                          style: TextStyle(
-                              color: kBlue,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 14),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(bottom: 30, top: 5),
+                    child: Row(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              date_now[0],
+                              style: TextStyle(
+                                  fontSize: 23,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 3),
+                              child: Text(
+                                date_now[1],
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey,
+                                    fontSize: 16),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
+                        Spacer(),
+                        TextButton(
+                          onPressed: () => _showMaterialDialog(context),
+                          child: Text(
+                            "Cancel",
+                            style: TextStyle(
+                                color: kBlue,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   TextField(
                     controller: titleController,
@@ -117,7 +144,17 @@ class _EntryPageState extends State<EntryPage> {
                       hintText: "Write a story",
                       border: InputBorder.none,
                     ),
-                  )
+                  ),
+                  Row(
+                    children: [
+                      Text("Mood"),
+                      Text("☹️"),
+                      Text("😞"),
+                      Text("😐"),
+                      Text("🙂"),
+                      Text("😁")
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -169,9 +206,10 @@ class _EntryPageState extends State<EntryPage> {
   }
 }
 
-String get_date() {
+List get_date() {
   var dateNow = DateTime.now();
-  var day = DateFormat('EEEE').format(dateNow).toString();
-  var month_day = DateFormat('MMMMd').format(dateNow).toString();
-  return month_day;
+  var day = DateFormat('EEEE').format(dateNow);
+  var month_day = DateFormat('MMMMd').format(dateNow);
+  List d = [day, month_day];
+  return d;
 }
