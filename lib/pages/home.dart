@@ -1,20 +1,12 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
+import 'dart:math';
+
 import 'package:diario/constants.dart';
-import 'package:diario/models/db_functions.dart';
+import 'package:diario/globals.dart';
+import 'package:diario/models/db_helper.dart';
 import 'package:diario/pages/entry.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-
-// fetch data from db
-Future<List> entries() async {
-  List e = await getEntries();
-  var date = DateTime.parse(e[0]['date_created']);
-  var day = DateFormat('EEEE').format(date);
-  var month_day = DateFormat('MMMMd').format(date);
-  List d = [day, month_day];
-  return d;
-}
 
 class Mobile extends StatefulWidget {
   const Mobile({Key? key}) : super(key: key);
@@ -24,6 +16,7 @@ class Mobile extends StatefulWidget {
 }
 
 class _MobileState extends State<Mobile> {
+  // Pages
   // for bottom navbar
   int _selectedIndex = 0;
   void _onItemSelected(int index) {
@@ -31,9 +24,6 @@ class _MobileState extends State<Mobile> {
       _selectedIndex = index;
     });
   }
-
-  // entries
-  Future<List> entries = getEntries();
 
   @override
   Widget build(BuildContext context) {
@@ -57,8 +47,10 @@ class _MobileState extends State<Mobile> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: kBlue,
         onPressed: () {
+          // push to the entry page and on pop, rebuild.
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => EntryPage()));
+                  context, MaterialPageRoute(builder: (context) => EntryPage()))
+              .then((_) => setState(() {}));
         },
         child: Icon(Icons.add),
       ),
@@ -67,8 +59,20 @@ class _MobileState extends State<Mobile> {
   }
 }
 
-class Home extends StatelessWidget {
-  const Home({Key? key}) : super(key: key);
+class Home extends StatefulWidget {
+  Home({Key? key}) : super(key: key);
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  Future<List> fetchEntry() async {
+    Future<List> entries = helper.getEntries();
+    return entries;
+  }
+
+  // entries (data from db)
 
   @override
   Widget build(BuildContext context) {
@@ -83,9 +87,14 @@ class Home extends StatelessWidget {
             clipBehavior: Clip.none,
             children: [
               Container(
+                decoration: BoxDecoration(
+                  color: kPrimary,
+                  image: DecorationImage(
+                      image: AssetImage("assets/images/bg_1.jpg"),
+                      fit: BoxFit.cover),
+                ),
                 padding:
-                    EdgeInsets.only(top: 20, bottom: 50, left: 30, right: 30),
-                color: kPrimary,
+                    EdgeInsets.only(top: 30, bottom: 60, left: 30, right: 30),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -97,12 +106,16 @@ class Home extends StatelessWidget {
                           "Good Morning",
                           style: TextStyle(
                             fontSize: 16,
+                            color: Colors.white,
                           ),
                         ),
                         Text(
                           "Elizabeth",
                           style: TextStyle(
-                              fontSize: 17.5, fontWeight: FontWeight.bold),
+                            fontSize: 17.5,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
                       ],
                     ),
@@ -201,74 +214,125 @@ class Home extends StatelessWidget {
             ],
           ),
           Padding(
-            padding: EdgeInsets.only(top: 85, left: 30, right: 30, bottom: 20),
-            child: Column(
-              children: [
-                Container(
-                  margin: EdgeInsets.only(bottom: 30),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Latest Entries",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 14),
-                      ),
-                      GestureDetector(
-                        child: Text(
-                          "Show more",
-                          style: TextStyle(color: kBlue, fontSize: 14),
-                        ),
-                      ),
-                    ],
+            padding: EdgeInsets.symmetric(horizontal: 30),
+            child: Container(
+              margin: EdgeInsets.only(bottom: 30, top: 85),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Latest Entries",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                   ),
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  color: kPrimary,
-                  child: Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(right: 15),
-                        width: 10,
-                        height: 50,
-                        color: Colors.blue,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(bottom: 3),
-                            child: Text(
-                              "10: 00 am",
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 13),
-                            ),
-                          ),
-                          Text(
-                            "November 13",
-                            style: TextStyle(
-                                fontSize: 17,
-                                color: Colors.black,
-                                fontFamily: "Roboto",
-                                fontWeight: FontWeight.w500),
-                          )
-                        ],
-                      ),
-                      Spacer(),
-                      Icon(
-                        Icons.chevron_right,
-                        color: Colors.grey,
-                      )
-                    ],
+                  GestureDetector(
+                    child: Text(
+                      "Show more",
+                      style: TextStyle(color: kBlue, fontSize: 15),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
+          ),
+          FutureBuilder(
+            future: fetchEntry(),
+            builder:
+                (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Text("Loading....");
+              } else {
+                if (snapshot.hasError)
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                else {
+                  print("sssssssssssuccessssss");
+                  List entries = snapshot.data!;
+                  print(entries);
+
+                  return Expanded(
+                    child: ListView(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      children: entries.map((e) {
+                        return Container(
+                          margin: EdgeInsets.only(bottom: 10),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 10),
+                          color: kPrimary,
+                          child: Row(
+                            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(right: 15),
+                                width: 10,
+                                height: 50,
+                                color: Colors.blue,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.only(bottom: 3),
+                                    child: Text(
+                                      "10: 00 am",
+                                      style: TextStyle(
+                                          color: Colors.grey, fontSize: 13),
+                                    ),
+                                  ),
+                                  Text(
+                                    "November 13",
+                                    style: TextStyle(
+                                        fontSize: 17,
+                                        color: Colors.black,
+                                        fontFamily: "Roboto",
+                                        fontWeight: FontWeight.w500),
+                                  )
+                                ],
+                              ),
+                              Spacer(),
+                              Icon(
+                                Icons.chevron_right,
+                                color: Colors.grey,
+                              )
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  );
+                }
+              }
+            },
           ),
         ],
       ),
+    );
+  }
+}
+
+class EntryDetail extends StatelessWidget {
+  const EntryDetail({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+          child: Column(
+        children: [
+          Row(
+            children: [
+              Icon(Icons.arrow_back),
+              Spacer(
+                flex: 10,
+              ),
+              Icon(Icons.edit),
+              Spacer(
+                flex: 1,
+              ),
+              Icon(Icons.menu)
+            ],
+          )
+        ],
+      )),
     );
   }
 }

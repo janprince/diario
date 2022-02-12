@@ -1,7 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, non_constant_identifier_names
 
-import 'package:diario/models/db_functions.dart';
+import 'package:diario/globals.dart';
 import 'package:diario/models/diary_entry.dart';
+import 'package:diario/pages/home.dart';
 import 'package:intl/intl.dart';
 import 'package:diario/constants.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,7 @@ class _EntryPageState extends State<EntryPage> {
   bool _validation_error = false;
 
   // moods
-  int moodSelectedIndex = 3;
+  int _moodSelectedIndex = 3;
   List moods = [
     "assets/icons/emoji_1.png",
     "assets/icons/emoji_2.png",
@@ -48,9 +49,11 @@ class _EntryPageState extends State<EntryPage> {
         return true;
       },
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         floatingActionButton: FloatingActionButton(
           backgroundColor: kBlue,
           onPressed: () async {
+            FocusManager.instance.primaryFocus?.unfocus();
             print(
                 "Title: ${titleController.value.text} \tStory: ${storyController.value.text} \tDate: ${date_now}");
             setState(() {
@@ -60,13 +63,12 @@ class _EntryPageState extends State<EntryPage> {
             });
             if (_validation_error == false) {
               DiaryEntry diary_entry = DiaryEntry(
-                  mood: moodSelectedIndex,
+                  mood: _moodSelectedIndex,
                   title: titleController.value.text,
                   entry: storyController.value.text);
 
-              await insertEntry(diary_entry);
-              List e = await getEntries();
-              print("trtrtt ${e}");
+              await helper.insertEntry(diary_entry);
+              Navigator.pop(context, Mobile());
             }
           },
           child: Icon(
@@ -83,13 +85,30 @@ class _EntryPageState extends State<EntryPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    child: GestureDetector(
-                      onTap: () => Navigator.pop(context),
-                      child: Icon(
-                        Icons.chevron_left,
-                        color: Colors.grey,
-                      ),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: () => Navigator.pop(context),
+                          child: Icon(
+                            Icons.close,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {},
+                          child: Text(
+                            "SAVE",
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.w500),
+                          ),
+                          style: TextButton.styleFrom(
+                            backgroundColor: kBlue,
+                            primary: Colors.white,
+                          ),
+                        )
+                      ],
                     ),
                   ),
                   Container(
@@ -102,7 +121,7 @@ class _EntryPageState extends State<EntryPage> {
                             Text(
                               date_now[0],
                               style: TextStyle(
-                                  fontSize: 23,
+                                  fontSize: 21,
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold),
                             ),
@@ -113,29 +132,38 @@ class _EntryPageState extends State<EntryPage> {
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     color: Colors.grey,
-                                    fontSize: 16),
+                                    fontSize: 15),
                               ),
                             ),
                           ],
                         ),
                         Spacer(),
-                        TextButton(
-                          onPressed: () => _showMaterialDialog(context),
-                          child: Text(
-                            "Cancel",
-                            style: TextStyle(
-                                color: kBlue,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 14),
-                          ),
-                        ),
+                        // emoji dropdown
+                        DropdownButton<dynamic>(
+                            underline: SizedBox(),
+                            // iconSize: 0.0,
+                            value: _moodSelectedIndex,
+                            items: moods.map((e) {
+                              return DropdownMenuItem(
+                                  value: moods.indexOf(e) + 1,
+                                  child: Image(
+                                    width: 40,
+                                    height: 40,
+                                    image: AssetImage(e),
+                                  ));
+                            }).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                _moodSelectedIndex = value;
+                              });
+                            }),
                       ],
                     ),
                   ),
                   TextField(
                     controller: titleController,
                     textCapitalization: TextCapitalization.sentences,
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(bottom: 0),
                       errorText: _validation_error ? 'Field required' : null,
@@ -152,14 +180,14 @@ class _EntryPageState extends State<EntryPage> {
                     decoration: InputDecoration(
                       hintStyle: TextStyle(
                           fontWeight: FontWeight.normal, color: Colors.grey),
-                      hintText: "Write a story",
+                      hintText: "Write more .....",
                       border: InputBorder.none,
                     ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: moods.map((e) {
-                      return moodSelectedIndex == moods.indexOf(e) + 1
+                      return _moodSelectedIndex == moods.indexOf(e) + 1
                           ? Container(
                               padding: EdgeInsets.all(0.5),
                               decoration: BoxDecoration(
@@ -174,7 +202,7 @@ class _EntryPageState extends State<EntryPage> {
                           : GestureDetector(
                               onTap: () {
                                 setState(() {
-                                  moodSelectedIndex = moods.indexOf(e) + 1;
+                                  _moodSelectedIndex = moods.indexOf(e) + 1;
                                 });
                               },
                               child: Image(
