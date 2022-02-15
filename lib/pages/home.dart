@@ -94,7 +94,7 @@ class _HomeState extends State<Home> {
                       fit: BoxFit.cover),
                 ),
                 padding:
-                    EdgeInsets.only(top: 30, bottom: 60, left: 30, right: 30),
+                    EdgeInsets.only(top: 30, bottom: 60, left: 26, right: 26),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -128,8 +128,8 @@ class _HomeState extends State<Home> {
               ),
               Positioned(
                 bottom: -50,
-                left: 30,
-                right: 30,
+                left: 26,
+                right: 26,
                 child: Material(
                   elevation: 9,
                   child: Container(
@@ -214,7 +214,7 @@ class _HomeState extends State<Home> {
             ],
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30),
+            padding: EdgeInsets.symmetric(horizontal: 26),
             child: Container(
               margin: EdgeInsets.only(bottom: 30, top: 85),
               child: Row(
@@ -222,12 +222,12 @@ class _HomeState extends State<Home> {
                 children: [
                   Text(
                     "Latest Entries",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   GestureDetector(
                     child: Text(
                       "Show more",
-                      style: TextStyle(color: kBlue, fontSize: 15),
+                      style: TextStyle(color: kBlue, fontSize: 16),
                     ),
                   ),
                 ],
@@ -246,55 +246,18 @@ class _HomeState extends State<Home> {
                 else {
                   print("sssssssssssuccessssss");
                   List entries = snapshot.data!;
-                  print(entries);
+                  print(entries[0]['mood'].runtimeType);
 
                   return Expanded(
                     child: ListView(
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
                       children: entries.map((e) {
-                        return Container(
-                          margin: EdgeInsets.only(bottom: 10),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 10),
-                          color: kPrimary,
-                          child: Row(
-                            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                margin: EdgeInsets.only(right: 15),
-                                width: 10,
-                                height: 50,
-                                color: Colors.blue,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.only(bottom: 3),
-                                    child: Text(
-                                      "10: 00 am",
-                                      style: TextStyle(
-                                          color: Colors.grey, fontSize: 13),
-                                    ),
-                                  ),
-                                  Text(
-                                    "November 13",
-                                    style: TextStyle(
-                                        fontSize: 17,
-                                        color: Colors.black,
-                                        fontFamily: "Roboto",
-                                        fontWeight: FontWeight.w500),
-                                  )
-                                ],
-                              ),
-                              Spacer(),
-                              Icon(
-                                Icons.chevron_right,
-                                color: Colors.grey,
-                              )
-                            ],
-                          ),
+                        return EntryCard(
+                          title: e['title'],
+                          entry: e['entry'],
+                          date: parseDateTime(e['date_created']),
+                          mood: e['mood'],
                         );
                       }).toList(),
                     ),
@@ -309,30 +272,99 @@ class _HomeState extends State<Home> {
   }
 }
 
-class EntryDetail extends StatelessWidget {
-  const EntryDetail({Key? key}) : super(key: key);
+class EntryCard extends StatelessWidget {
+  String title;
+  String entry;
+  List date;
+  int mood;
+
+  EntryCard(
+      {Key? key,
+      required this.title,
+      required this.entry,
+      required this.date,
+      required this.mood})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-          child: Column(
-        children: [
-          Row(
-            children: [
-              Icon(Icons.arrow_back),
-              Spacer(
-                flex: 10,
-              ),
-              Icon(Icons.edit),
-              Spacer(
-                flex: 1,
-              ),
-              Icon(Icons.menu)
-            ],
-          )
-        ],
-      )),
+    return Padding(
+      padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+      child: Material(
+        color: kPrimary,
+        elevation: 3,
+        child: InkWell(
+          onTap: (() {}),
+          child: Container(
+            // margin: EdgeInsets.only(bottom: 10),
+            padding: EdgeInsets.all(16),
+            color: Colors.transparent,
+            child: Row(
+              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Container(
+                //   margin: EdgeInsets.only(right: 15),
+                //   width: 8,
+                //   height: 50,
+                //   color: Colors.blue,
+                // ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(children: [
+                      Text(
+                        date[1],
+                        style: TextStyle(
+                            fontSize: 16.5,
+                            fontWeight: FontWeight.w500,
+                            color: kBlue),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Icon(
+                          Icons.circle,
+                          size: 5,
+                          color: kBlue,
+                        ),
+                      ),
+                      Text(
+                        date[0],
+                        style:
+                            TextStyle(fontSize: 16.5, color: Colors.blueGrey),
+                      )
+                    ]),
+                    SizedBox(
+                      height: 12,
+                    ),
+                    Text(
+                      title,
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.black,
+                          fontFamily: "Roboto",
+                          fontWeight: FontWeight.w500),
+                    ),
+                    Text(
+                      entry,
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.black,
+                        fontFamily: "Roboto",
+                      ),
+                    ),
+                  ],
+                ),
+                Spacer(),
+                Image(
+                  image: AssetImage(moods[mood - 1]),
+                  width: 35,
+                  height: 35,
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

@@ -44,7 +44,9 @@ class dbHelper {
     // Get a reference to the database.
     final Db = await db;
 
-    final List entry_maps = await Db.query("diary_entry");
+    // get the db table sorted by date_created
+    final List entry_maps =
+        await Db.query("diary_entry", orderBy: "date_created DESC");
     return entry_maps;
   }
 }
