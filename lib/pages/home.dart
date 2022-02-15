@@ -52,7 +52,7 @@ class _MobileState extends State<Mobile> {
                   context, MaterialPageRoute(builder: (context) => EntryPage()))
               .then((_) => setState(() {}));
         },
-        child: Icon(Icons.add),
+        child: Icon(Icons.create_rounded),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
@@ -90,7 +90,7 @@ class _HomeState extends State<Home> {
                 decoration: BoxDecoration(
                   color: kPrimary,
                   image: DecorationImage(
-                      image: AssetImage("assets/images/bg_1.jpg"),
+                      image: AssetImage("assets/images/bg_2.jpg"),
                       fit: BoxFit.cover),
                 ),
                 padding:

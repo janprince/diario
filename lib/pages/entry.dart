@@ -145,12 +145,13 @@ class _EntryPageState extends State<EntryPage> {
                             value: _moodSelectedIndex,
                             items: moods.map((e) {
                               return DropdownMenuItem(
-                                  value: moods.indexOf(e) + 1,
-                                  child: Image(
-                                    width: 40,
-                                    height: 40,
-                                    image: AssetImage(e),
-                                  ));
+                                value: moods.indexOf(e) + 1,
+                                child: Image(
+                                  width: 40,
+                                  height: 40,
+                                  image: AssetImage(e),
+                                ),
+                              );
                             }).toList(),
                             onChanged: (value) {
                               setState(() {
