@@ -3,8 +3,11 @@ library diario.globals;
 import 'package:diario/models/db_helper.dart';
 import 'package:intl/intl.dart';
 
-// database helper
+// database helper (single instance for entire app)
 dbHelper helper = dbHelper();
+
+// global_database
+Future<List>? gbEntries;
 
 // moods
 List moods = [

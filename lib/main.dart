@@ -3,6 +3,7 @@
 import 'package:diario/constants.dart';
 import 'package:diario/pages/home.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
   // open database
@@ -15,7 +16,11 @@ class DiaryApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(scaffoldBackgroundColor: kPrimary, fontFamily: "Roboto"),
+      theme: ThemeData(
+          scaffoldBackgroundColor: kPrimary,
+          textTheme: GoogleFonts.amethystaTextTheme(
+            Theme.of(context).textTheme,
+          )),
       home: Mobile(),
     );
   }
