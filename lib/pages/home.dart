@@ -3,6 +3,7 @@
 import 'package:diario/constants.dart';
 import 'package:diario/globals.dart';
 import 'package:diario/models/db_helper.dart';
+import 'package:diario/pages/detail.dart';
 import 'package:diario/pages/entry.dart';
 import 'package:flutter/material.dart';
 
@@ -183,6 +184,7 @@ class _HomeState extends State<Home> {
                       shrinkWrap: true,
                       children: entries.map((e) {
                         return EntryCard(
+                          id: e['id'],
                           title: e['title'],
                           entry: e['entry'],
                           date: parseDateTime(e['date_created']),
@@ -207,13 +209,15 @@ class EntryCard extends StatelessWidget {
   String entry;
   List date;
   int mood;
+  int id;
 
   EntryCard(
       {Key? key,
       required this.title,
       required this.entry,
       required this.date,
-      required this.mood})
+      required this.mood,
+      required this.id})
       : super(key: key);
 
   @override
@@ -224,7 +228,18 @@ class EntryCard extends StatelessWidget {
         color: kPrimary,
         elevation: 3,
         child: InkWell(
-          onTap: (() {}),
+          onTap: (() {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => EntryDetail(
+                          title: title,
+                          id: id,
+                          date: date,
+                          mood: mood,
+                          entry: entry,
+                        )));
+          }),
           child: Container(
             // margin: EdgeInsets.only(bottom: 10),
             padding: EdgeInsets.all(16),
@@ -386,7 +401,7 @@ class _statCardState extends State<statCard> {
                         double average_mood = sum / entries.length;
                         return Image(
                           image: AssetImage(
-                              'assets/icons/emoji_${average_mood.toInt()}.png'),
+                              'assets/icons/emoji_${average_mood.round()}.png'),
                           width: 30,
                           height: 30,
                         );

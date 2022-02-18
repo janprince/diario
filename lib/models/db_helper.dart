@@ -49,4 +49,33 @@ class dbHelper {
         await Db.query("diary_entry", orderBy: "date_created DESC");
     return entry_maps;
   }
+
+  Future<void> updateDog(DiaryEntry entry) async {
+    // Get a reference to the database.
+    final Db = await db;
+
+    // Update the given Dog.
+    await Db.update(
+      'diary_entry',
+      entry.toMap(),
+      // Ensure that the Diary entry has a matching id.
+      where: 'id = ?',
+      // Pass the Dog's id as a whereArg to prevent SQL injection.
+      whereArgs: [entry.id],
+    );
+  }
+
+  Future<void> deleteDog(int id) async {
+    // Get a reference to the database.
+    final Db = await db;
+
+    // Remove the Dog from the database.
+    await Db.delete(
+      'diary_entry',
+      // Use a `where` clause to delete a specific dog.
+      where: 'id = ?',
+      // Pass the Dog's id as a whereArg to prevent SQL injection.
+      whereArgs: [id],
+    );
+  }
 }

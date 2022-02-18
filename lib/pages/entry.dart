@@ -49,7 +49,7 @@ class _EntryPageState extends State<EntryPage> {
         return true;
       },
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         floatingActionButton: FloatingActionButton(
           backgroundColor: kBlue,
           onPressed: () async {
@@ -177,7 +177,7 @@ class _EntryPageState extends State<EntryPage> {
                   TextField(
                     controller: storyController,
                     textCapitalization: TextCapitalization.sentences,
-                    maxLines: 19,
+                    maxLines: 20,
                     decoration: InputDecoration(
                       hintStyle: TextStyle(
                           fontWeight: FontWeight.normal, color: Colors.grey),
@@ -185,35 +185,35 @@ class _EntryPageState extends State<EntryPage> {
                       border: InputBorder.none,
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: moods.map((e) {
-                      return _moodSelectedIndex == moods.indexOf(e) + 1
-                          ? Container(
-                              padding: EdgeInsets.all(0.5),
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(width: 2, color: kBlue)),
-                              child: Image(
-                                image: AssetImage(e),
-                                width: 42,
-                                height: 42,
-                              ),
-                            )
-                          : GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _moodSelectedIndex = moods.indexOf(e) + 1;
-                                });
-                              },
-                              child: Image(
-                                image: AssetImage(e),
-                                width: 42,
-                                height: 42,
-                              ),
-                            );
-                    }).toList(),
-                  ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   children: moods.map((e) {
+                  //     return _moodSelectedIndex == moods.indexOf(e) + 1
+                  //         ? Container(
+                  //             padding: EdgeInsets.all(0.5),
+                  //             decoration: BoxDecoration(
+                  //                 shape: BoxShape.circle,
+                  //                 border: Border.all(width: 2, color: kBlue)),
+                  //             child: Image(
+                  //               image: AssetImage(e),
+                  //               width: 42,
+                  //               height: 42,
+                  //             ),
+                  //           )
+                  //         : GestureDetector(
+                  //             onTap: () {
+                  //               setState(() {
+                  //                 _moodSelectedIndex = moods.indexOf(e) + 1;
+                  //               });
+                  //             },
+                  //             child: Image(
+                  //               image: AssetImage(e),
+                  //               width: 42,
+                  //               height: 42,
+                  //             ),
+                  //           );
+                  //   }).toList(),
+                  // ),
                 ],
               ),
             ),
