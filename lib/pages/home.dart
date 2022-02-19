@@ -2,8 +2,9 @@
 
 import 'package:diario/constants.dart';
 import 'package:diario/globals.dart';
-import 'package:diario/models/db_helper.dart';
-import 'package:diario/pages/detail.dart';
+import 'package:diario/pages/components/entry_card.dart';
+import 'package:diario/pages/components/stat_card.dart';
+import 'package:diario/pages/entries.dart';
 import 'package:diario/pages/entry.dart';
 import 'package:flutter/material.dart';
 
@@ -29,7 +30,7 @@ class _MobileState extends State<Mobile> {
     return Scaffold(
       // resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child: Home(),
+        child: _selectedIndex == 0 ? Home() : Entries(),
       ),
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: kBlue,
@@ -151,6 +152,9 @@ class _HomeState extends State<Home> {
                         TextStyle(fontWeight: FontWeight.bold, fontSize: 15.5),
                   ),
                   GestureDetector(
+                    onTap: (() {
+                      setState(() {});
+                    }),
                     child: Text(
                       "Show more",
                       style: TextStyle(color: kBlue, fontSize: 15.5),
@@ -197,239 +201,6 @@ class _HomeState extends State<Home> {
               }
             },
           ),
-        ],
-      ),
-    );
-  }
-}
-
-// entry card UI
-class EntryCard extends StatelessWidget {
-  String title;
-  String entry;
-  List date;
-  int mood;
-  int id;
-
-  EntryCard(
-      {Key? key,
-      required this.title,
-      required this.entry,
-      required this.date,
-      required this.mood,
-      required this.id})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-      child: Material(
-        color: kPrimary,
-        elevation: 3,
-        child: InkWell(
-          onTap: (() {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => EntryDetail(
-                          title: title,
-                          id: id,
-                          date: date,
-                          mood: mood,
-                          entry: entry,
-                        )));
-          }),
-          child: Container(
-            // margin: EdgeInsets.only(bottom: 10),
-            padding: EdgeInsets.all(16),
-            color: Colors.transparent,
-            child: Row(
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(children: [
-                      Text(
-                        date[1],
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: kBlue),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Icon(
-                          Icons.circle,
-                          size: 5,
-                          color: kBlue,
-                        ),
-                      ),
-                      Text(
-                        date[0],
-                        style: TextStyle(fontSize: 16, color: Colors.blueGrey),
-                      )
-                    ]),
-                    SizedBox(
-                      height: 12,
-                    ),
-                    Text(
-                      title,
-                      style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black,
-                          // fontFamily: "Roboto",
-                          fontWeight: FontWeight.w500),
-                    ),
-                    Text(
-                      entry.replaceRange(entry.length > 40 ? 40 : entry.length,
-                          entry.length, "..."),
-                      style: TextStyle(
-                        fontSize: 13.5,
-                        color: Colors.black,
-                        fontFamily: "Roboto",
-                      ),
-                    ),
-                  ],
-                ),
-                Spacer(),
-                Image(
-                  image: AssetImage(moods[mood - 1]),
-                  width: 35,
-                  height: 35,
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class statCard extends StatefulWidget {
-  const statCard({Key? key}) : super(key: key);
-
-  @override
-  _statCardState createState() => _statCardState();
-}
-
-class _statCardState extends State<statCard> {
-  // int n_entries = gbEntries != null ? gbEntries!.length : 000;
-  // var average_mood = 000;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(20),
-      color: kPrimary,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            margin: EdgeInsets.only(right: 15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 5),
-                  child: Text(
-                    "Entries",
-                    style: TextStyle(fontSize: 13.5, color: kBlue),
-                  ),
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    // no of diary entries
-                    FutureBuilder(
-                        // wait for the global db to be filed
-                        future: gbEntries,
-                        builder: (BuildContext context,
-                            AsyncSnapshot<List<dynamic>> snapshot) {
-                          if (snapshot.hasData) {
-                            List entries = snapshot.data!;
-                            int n_entries = entries.length;
-                            return Text(
-                              "$n_entries",
-                              style: TextStyle(
-                                  fontSize: 19, fontWeight: FontWeight.bold),
-                            );
-                          } else {
-                            return CircularProgressIndicator();
-                          }
-                        }),
-                    Text(
-                      " entries",
-                      style: TextStyle(fontSize: 13, color: Colors.grey),
-                    )
-                  ],
-                )
-              ],
-            ),
-          ),
-          SizedBox(
-            width: 50,
-          ),
-          Container(
-            margin: EdgeInsets.only(right: 15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 5),
-                  child: Text(
-                    "Average Mood",
-                    style: TextStyle(fontSize: 13.5, color: kBlue),
-                  ),
-                ),
-
-                // average mood
-                FutureBuilder(
-                    // wait for the global db to be filed
-                    future: gbEntries,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<List<dynamic>> snapshot) {
-                      if (snapshot.hasData) {
-                        List entries = snapshot.data!;
-                        int sum = 0;
-                        for (int i = 0; i < entries.length; i++) {
-                          sum = sum + entries[i]['mood'].hashCode;
-                        }
-                        double average_mood = sum / entries.length;
-                        return Image(
-                          image: AssetImage(
-                              'assets/icons/emoji_${average_mood.round()}.png'),
-                          width: 30,
-                          height: 30,
-                        );
-                      } else {
-                        return CircularProgressIndicator();
-                      }
-                    }),
-
-                // Row(
-                //   crossAxisAlignment: CrossAxisAlignment.end,
-                //   children: [
-                //     Text(
-                //       "1189",
-                //       style: TextStyle(
-                //           fontSize: 19,
-                //           fontWeight: FontWeight.bold),
-                //     ),
-                //     Text(
-                //       " steps",
-                //       style: TextStyle(
-                //           fontSize: 13, color: Colors.grey),
-                //     )
-                //   ],
-                // )
-              ],
-            ),
-          ),
-          Divider(color: Colors.grey),
         ],
       ),
     );

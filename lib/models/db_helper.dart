@@ -65,7 +65,7 @@ class dbHelper {
     );
   }
 
-  Future<void> deleteDog(int id) async {
+  Future<void> deleteEntry(int id) async {
     // Get a reference to the database.
     final Db = await db;
 

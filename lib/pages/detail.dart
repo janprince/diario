@@ -1,7 +1,8 @@
 import 'package:diario/globals.dart';
+import 'package:diario/pages/home.dart';
 import 'package:flutter/material.dart';
 
-class EntryDetail extends StatelessWidget {
+class EntryDetail extends StatefulWidget {
   String title;
   String entry;
   List date;
@@ -17,6 +18,11 @@ class EntryDetail extends StatelessWidget {
       required this.id})
       : super(key: key);
 
+  @override
+  State<EntryDetail> createState() => _EntryDetailState();
+}
+
+class _EntryDetailState extends State<EntryDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +45,11 @@ class EntryDetail extends StatelessWidget {
                   padding: const EdgeInsets.only(right: 17),
                   child: Icon(Icons.edit),
                 ),
-                Icon(Icons.delete)
+                GestureDetector(
+                    onTap: () {
+                      _showMaterialDialog(context);
+                    },
+                    child: Icon(Icons.delete))
               ],
             ),
             Container(
@@ -50,7 +60,7 @@ class EntryDetail extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        date[0],
+                        widget.date[0],
                         style: TextStyle(
                             fontSize: 21,
                             color: Colors.black,
@@ -59,7 +69,7 @@ class EntryDetail extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(top: 3),
                         child: Text(
-                          date[1],
+                          widget.date[1],
                           style: TextStyle(
                               fontWeight: FontWeight.w500,
                               color: Colors.grey,
@@ -71,7 +81,7 @@ class EntryDetail extends StatelessWidget {
                   Spacer(),
                   // emoji dropdown
                   Image(
-                    image: AssetImage(moods[mood - 1]),
+                    image: AssetImage(moods[widget.mood - 1]),
                     width: 35,
                     height: 35,
                   )
@@ -81,14 +91,46 @@ class EntryDetail extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: Text(
-                title,
+                widget.title,
                 style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
               ),
             ),
-            Expanded(child: SingleChildScrollView(child: Text(entry))),
+            Expanded(child: SingleChildScrollView(child: Text(widget.entry))),
           ],
         ),
       )),
     );
+  }
+
+  void _showMaterialDialog(BuildContext dialogContext) {
+    AlertDialog alert = AlertDialog(
+      // title: Text("Discard Entry"),
+      content: Text("Are you sure you want to delete?"),
+      actions: [
+        TextButton(
+            onPressed: () async {
+              await helper.deleteEntry(widget.id);
+              Navigator.pop(dialogContext);
+              Navigator.pop(context, Mobile());
+            },
+            child: Text(
+              "Delete",
+              style: TextStyle(color: Colors.black),
+            )),
+        TextButton(
+            onPressed: () {
+              Navigator.pop(dialogContext);
+            },
+            child: Text(
+              "Cancel",
+              style: TextStyle(color: Colors.black),
+            ))
+      ],
+    );
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        });
   }
 }
